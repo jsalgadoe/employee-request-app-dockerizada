@@ -1,4 +1,3 @@
-import { query } from "./db.js"; //* uso de apdater pg
 import bcrypt from "bcryptjs";
 import { prisma } from "../lib/prisma.js";
 

@@ -4,10 +4,7 @@ services:
       context: ./backend
       args:
         POSTGRES_HOST: 'db'
-        POSTGRES_USER: postgres
-        POSTGRES_DB: employees
-        POSTGRES_PASSWORD: pass12
-        POSTGRES_PORT: 5432
+        DATABASE_URL: "postgresql://postgres:pass12@db:5432/employees?schema=public"
         SERVER_PORT: 3000
     environment:
       NODE_ENV: production

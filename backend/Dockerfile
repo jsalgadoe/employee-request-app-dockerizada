@@ -6,18 +6,12 @@ ENV NODE_VERSION=20.16.0 \
 
 WORKDIR /app
 
-ARG POSTGRES_PORT
 ARG POSTGRES_HOST
-ARG POSTGRES_USER
-ARG POSTGRES_PASSWORD
-ARG POSTGRES_DB
 ARG SERVER_PORT
+ARG DATABASE_URL
 
-ENV PGDATABASE=${POSTGRES_DB} \
-    PGHOST=${POSTGRES_HOST} \
-    PGPORT=${POSTGRES_PORT} \
-    PGUSER=${POSTGRES_USER} \
-    PGPASSWORD=${POSTGRES_PASSWORD}\
+ENV PGHOST=${POSTGRES_HOST} \
+    DATABASE_URL=${DATABASE_URL} \
     PORT=${SERVER_PORT}
 
 RUN --mount=type=bind,source=package.json,target=package.json \
@@ -26,12 +20,12 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends  \
-      ca-certificates  \
-      curl  \
-      git  \
-      wget  \
-      unzip \
-      postgresql-client
+    ca-certificates  \
+    curl  \
+    git  \
+    wget  \
+    unzip \
+    postgresql-client
 
 # Install Node.js
 ENV PATH=/usr/local/node/bin:$PATH

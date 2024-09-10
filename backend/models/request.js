@@ -1,3 +1,4 @@
+import { prisma } from "../lib/prisma.js";
 export class RequestModel {
   static async findAll(search_term = "", page_number = 1, page_size = 10) {
     // console.log((page_number = 1), (page_size = 10));
