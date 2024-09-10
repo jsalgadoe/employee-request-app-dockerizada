@@ -101,6 +101,28 @@ export const NewPage = () => {
               )}
             </Grid>
 
+            <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
+              <Typography className="my-2"> Descripcion</Typography>
+              <TextareaAutosize
+                maxRows={12}
+                cols={44}
+                className="border-gray-500 mt-2"
+                aria-label="maximum height"
+                placeholder="Maximo 12 filas"
+                sx={styleTexfield}
+                {...register("descripcion", { required: true })}
+                aria-invalid={errors.description ? "true" : "false"}
+              />
+              {errors.descripcion?.type === "required" && (
+                <p
+                  role="alert"
+                  className="text-red-500 font-semibold text-xs my-2"
+                >
+                  la Description es requerido
+                </p>
+              )}
+            </Grid>
+
             {!!error && (
               <Grid sx={{ mt: 2, width: "100%" }}>
                 <p
