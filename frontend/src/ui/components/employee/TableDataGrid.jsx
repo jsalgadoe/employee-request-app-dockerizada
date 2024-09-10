@@ -78,7 +78,6 @@ export const TableDataGrid = () => {
   };
 
   useEffect(() => {
-    console.log(`Page: ${page}, PageSize: ${pageSize}`);
     fetchData();
   }, [page, pageSize]);
 

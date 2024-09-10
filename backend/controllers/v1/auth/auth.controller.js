@@ -157,18 +157,25 @@ export class AuthController {
   };
 
   static ListarUsuarios = async (req, res) => {
-    const usuarios = await UserModel.findAll();
-
-    if (!usuarios) {
-      return res.status(404).json({
-        ok: false,
-        msg: "No hay usuarios que mostrar",
+    const { search_term = "", page_number = 1, page_size = 10 } = req.query;
+    try {
+      const pagination = await UserModel.findAll(
+        search_term,
+        page_number,
+        page_size
+      );
+      if (!pagination) {
+        return res.status(403).json({
+          message: "error",
+        });
+      }
+      return res.status(200).json({
+        ok: true,
+        pagination,
       });
+    } catch (err) {
+      res.status(400).json({ errors: err.errors });
     }
-    return res.status(200).json({
-      ok: true,
-      usuarios,
-    });
   };
 
   static UpdateUsuario = async (req, res) => {

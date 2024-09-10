@@ -8,6 +8,7 @@ import { AuthContext } from "../auth/context/AuthContext";
 import { AuthRouter } from "../auth/routes/AuthRouter";
 import { EmployeeRouter } from "../employee/routes/EmployeeRouter";
 import { RequestRouter } from "../employee-request/routes/RequestRouter";
+import { UsersPage } from "../auth/pages/UsersPage";
 
 export const AppRouter = () => {
   const { status } = useContext(AuthContext);
@@ -27,7 +28,7 @@ export const AppRouter = () => {
         <>
           <Route path="/employees/*" element={<EmployeeRouter />} />
           <Route path="/requests/*" element={<RequestRouter />} />
-
+          <Route path="/auth/users" element={<UsersPage />} />
           <Route path="*" element={<Navigate to="/employees/*" />} />
         </>
       )}

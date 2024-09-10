@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavBar } from "../../ui/components/shared/NavBar";
+import { TableDataGrid } from "../../ui/components/users/TableDataGrid";
 // import PropTypes from "prop-types";
 
 export const UsersPage = () => {
@@ -25,7 +26,7 @@ export const UsersPage = () => {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        sx={{ minHeight: "100vh", backgroundColor: "primary.main", padding: 4 }}
+        sx={{ minHeight: "100vh", backgroundColor: "dcdcdcd6", padding: 4 }}
       >
         <Grid
           className="box-shadow"
@@ -43,12 +44,14 @@ export const UsersPage = () => {
           size={{ xs: 3 }}
           className="box-shadow"
           sx={{
-            width: { sm: 450 },
+            width: { sm: 850 },
             backgroundColor: "white",
             padding: 3,
             borderRadius: 2,
           }}
-        ></Grid>
+        >
+          <TableDataGrid is_admin={user.is_admin} />
+        </Grid>
       </Grid>
     </>
   );

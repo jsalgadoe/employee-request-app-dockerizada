@@ -2,8 +2,7 @@ import { prisma } from "../lib/prisma.js";
 export class EmployeeModel {
   static async findAll(search_term = "", page_number = 1, page_size = 10) {
     const offset = (page_number - 1) * page_size;
-    console.log({ offset, page_number, page_size });
-    //** TODO PENDIENTE SEARCH_TERM */
+
     try {
       const results = await prisma.employee.findMany({
         skip: Number(offset),
@@ -27,8 +26,6 @@ export class EmployeeModel {
           },
         },
       });
-
-      console.log(totalResults / page_size);
 
       const total_pages = Math.ceil(totalResults / page_size);
 

@@ -98,24 +98,51 @@ export class UserModel {
     }
   }
 
-  static async findAll() {
+  static async findAll(search_term = "", page_number = 1, page_size = 10) {
+    const offset = (page_number - 1) * page_size;
+
     try {
       const results = await prisma.user.findMany({
-        orderBy: {
-          id: "desc",
+        skip: Number(offset),
+        take: Number(page_size),
+        where: {
+          name: {
+            contains: search_term,
+            mode: "insensitive",
+          },
         },
         select: {
           id: true,
-          is_admin: true,
           status: true,
+          is_admin: true,
           name: true,
+        },
+        orderBy: {
+          id: "desc",
         },
       });
 
-      if (!results.length === 0) return null;
+      const totalResults = await prisma.user.count({
+        where: {
+          name: {
+            contains: search_term,
+            mode: "insensitive",
+          },
+        },
+      });
 
-      return results;
-    } catch (error) {
+      const total_pages = Math.ceil(totalResults / page_size);
+
+      return {
+        current_page: parseInt(page_number),
+        total_pages: total_pages,
+        total_results: totalResults,
+        page_size: parseInt(page_size),
+        has_next_page: page_number < total_pages,
+        has_previous_page: page_number > 1,
+        results: results,
+      };
+    } catch (err) {
       console.error("Error ejecutando la consulta:", err.stack);
       throw err;
     }
@@ -132,8 +159,14 @@ export class UserModel {
           status: status,
           is_admin: is_admin,
         },
+        select: {
+          id: true,
+          name: true,
+          status: true,
+          is_admin: true,
+        },
       });
-      console.log(updatedUser);
+
       if (updatedUser.length === 0) return null;
       return updatedUser;
     } catch (error) {
