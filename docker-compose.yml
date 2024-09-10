@@ -1,0 +1,63 @@
+services:
+  server:
+    build:
+      context: ./backend
+      args:
+        POSTGRES_HOST: 'db'
+        POSTGRES_USER: postgres
+        POSTGRES_DB: employees
+        POSTGRES_PASSWORD: pass12
+        POSTGRES_PORT: 5432
+        SERVER_PORT: 3000
+    environment:
+      NODE_ENV: production
+
+    ports:
+      - 3000:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - postgresNet
+
+  front-end:
+    build:
+      context: ./frontend
+      args:
+        SERVER_PORT: 3001
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3001:5173
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - postgresNet
+
+  db:
+    image: postgres
+    restart: always
+    user: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./pg_dumps:/var/lib/postgresql/dumps
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=employees
+      - POSTGRES_PASSWORD=pass12
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - postgresNet
+
+networks:
+  postgresNet:
+    driver: bridge
+volumes:
+  db-data:
