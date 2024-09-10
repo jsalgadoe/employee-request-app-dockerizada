@@ -1,5 +1,4 @@
 import { CircularProgress, Grid2 } from "@mui/material";
-import React from "react";
 
 function GradientCircularProgress() {
   return (

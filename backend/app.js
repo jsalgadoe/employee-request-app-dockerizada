@@ -7,7 +7,7 @@ import { requestRouter } from "./routes/request.js";
 
 import { validarJWT } from "./middlewares/validar-jwt.js";
 import { verificarAdmin } from "./middlewares/verificar_admin.js";
-const app = express();
+export const app = express();
 
 dotenv.config();
 

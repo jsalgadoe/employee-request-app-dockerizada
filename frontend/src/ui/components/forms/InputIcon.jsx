@@ -1,13 +1,5 @@
+/* eslint-disable react/prop-types */
 import { InputAdornment } from "@mui/material";
-import React from "react";
-
-interface Props {
-  icon: React.ReactNode;
-  color: string;
-  iconSecond?: React.ReactNode;
-  valueChange?: boolean;
-  changeIcon?: React.Dispatch<React.SetStateAction<boolean>> | undefined;
-}
 
 export const InputIcon = ({
   icon,
@@ -15,7 +7,7 @@ export const InputIcon = ({
   iconSecond,
   changeIcon,
   valueChange = false,
-}: Props) => {
+}) => {
   return (
     <>
       <div
