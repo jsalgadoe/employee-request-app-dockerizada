@@ -43,4 +43,4 @@ COPY --chown=${USER}:${USER} . .
 EXPOSE ${SERVER_PORT}
 
 # Run the application.
-CMD node app.js
+CMD npm run start
