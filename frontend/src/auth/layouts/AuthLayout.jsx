@@ -1,6 +1,5 @@
 import Grid from "@mui/material/Grid2";
 import { Typography } from "@mui/material";
-import { ButtonToggle } from "../../ui";
 import PropTypes from "prop-types";
 
 export const AuthLayout = ({ children, titulo }) => {
@@ -13,8 +12,6 @@ export const AuthLayout = ({ children, titulo }) => {
       justifyContent="center"
       sx={{ minHeight: "100vh", backgroundColor: "primary.main", padding: 4 }}
     >
-      <ButtonToggle />
-
       <Grid
         className="box-shadow"
         justifyContent="end"

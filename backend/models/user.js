@@ -72,4 +72,29 @@ export class UserModel {
       throw err;
     }
   }
+
+  static async registerUserAdmin({ name, password }) {
+    try {
+      const salt = bcrypt.genSaltSync();
+      const password_bcrypt = bcrypt.hashSync(password, salt);
+
+      const user = await prisma.user.create({
+        data: {
+          name: name.toLowerCase(),
+          password: password_bcrypt,
+          is_admin: true,
+          status: true,
+        },
+        select: {
+          id: true,
+          name: true,
+          is_admin: true,
+        },
+      });
+
+      return user;
+    } catch (err) {
+      console.error("Error ejecutando la consulta:", err.stack);
+    }
+  }
 }

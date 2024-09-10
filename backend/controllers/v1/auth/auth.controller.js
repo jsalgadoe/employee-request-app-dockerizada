@@ -115,4 +115,44 @@ export class AuthController {
       token: token,
     });
   };
+
+  static CreateAdmin = async (req, res) => {
+    try {
+      const name = "admin";
+      let user = await UserModel.findByUserName(name);
+
+      if (user) {
+        return res.status(400).json({
+          ok: false,
+          msg: "El usuario ya existe",
+        });
+      }
+
+      user = await UserModel.registerUserAdmin({
+        name: name,
+        password: "123456",
+        is_admin: true,
+        status: true,
+      });
+
+      const token = await generarJwt(user.id, user.name, user.is_admin);
+
+      res.status(201).json({
+        ok: true,
+        user: {
+          id: user.id,
+          name: user.name,
+          is_admin: user.is_admin,
+          status: user.status,
+        },
+        token: token,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        ok: false,
+        msg: "Por favor hable con el administrador",
+      });
+    }
+  };
 }

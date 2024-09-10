@@ -1,12 +1,12 @@
-import { Button, TextField } from "@mui/material";
+import { Button, Link, TextField, Typography } from "@mui/material";
 // import { Link as RouterLink, useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
-
+import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layouts/AuthLayout";
 import { InputIcon } from "../../ui/components/forms/InputIcon";
 import { Email, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useContext, useState } from "react";
-
+import { useForm } from "react-hook-form";
 // import { AlertMuiComponent } from "../../ui";
 
 import { employeeRequestApi } from "../../utils/employeeRequestApi";
@@ -23,30 +23,41 @@ const styleTexfield = {
 export const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login: StarLogin } = useContext(AuthContext);
+  const [error, setError] = useState("");
 
-  const onLogin = async () => {
-    const user = "jorge019";
-    const password = "123456";
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ defaultValues: { user: "", password: "" } });
 
-    const { data } = await employeeRequestApi.post(
-      "http://localhost:3000/api/v1/auth/login",
-      { name: user, password }
-    );
+  const onSubmit = async (data) => {
+    try {
+      const { data: result } = await employeeRequestApi.post(
+        "http://localhost:3000/api/v1/auth/login",
+        { name: data.user, password: data.password }
+      );
 
-    StarLogin(data.user, data.token);
+      StarLogin(result.user, result.token);
+    } catch (error) {
+      console.log(error.response.data);
+      if (!error.response.data.ok) {
+        setError("Credenciales Incorrectas");
+      }
+    }
   };
 
   return (
     <AuthLayout titulo="Iniciar sesión">
       <form
-        onSubmit={() => {}}
+        onSubmit={handleSubmit(onSubmit)}
         className="animate__animated animate__fadeIn  animate__faster roboto-regular"
       >
         <Grid container>
           <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
             <TextField
-              label="Correo"
-              type="email"
+              label="usuario"
+              type="text"
               placeholder="correo@google.com"
               sx={styleTexfield}
               fullWidth
@@ -55,7 +66,17 @@ export const LoginPage = () => {
                   <InputIcon icon={<Email />} color="primary.main" />
                 ),
               }}
+              {...register("user", { required: true })}
+              aria-invalid={errors.user ? "true" : "false"}
             />
+            {errors.user?.type === "required" && (
+              <p
+                role="alert"
+                className="text-red-500 font-semibold text-xs my-2"
+              >
+                El usuario es requerido
+              </p>
+            )}
           </Grid>
 
           <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
@@ -78,52 +99,56 @@ export const LoginPage = () => {
                   />
                 ),
               }}
+              {...register("password", { required: true })}
+              aria-invalid={errors.password ? "true" : "false"}
             />
+            {errors.password?.type === "required" && (
+              <p
+                role="alert"
+                className="text-red-500 font-semibold text-xs my-2"
+              >
+                La contraseña es requerida
+              </p>
+            )}
           </Grid>
-          {/* 
+
           {!!error && (
-            <Grid item sx={{ mt: 2, width: "100%" }}>
-              <AlertMuiComponent
-                message={error}
-                severity="error"
-                setError={setError}
-              />
+            <Grid sx={{ mt: 2, width: "100%" }}>
+              <p
+                role="alert"
+                className="text-red-500 font-semibold text-sm my-2 bg-red-100 p-5"
+              >
+                {error}
+              </p>
             </Grid>
-          )} */}
+          )}
 
           {/* contenedor de botones */}
-          <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
+          <Grid container spacing={2} sx={{ mb: 2, mt: 1, width: "100%" }}>
             <Grid size={{ xs: 12, sm: 12 }}>
-              <Button
-                onClick={onLogin}
-                type="button"
-                variant="contained"
-                fullWidth
-              >
+              <Button type="input" variant="contained" fullWidth>
                 Login
               </Button>
             </Grid>
+            <Grid
+              container
+              display="flex"
+              direction="row"
+              justifyContent="end"
+              alignItems="center"
+            >
+              <Typography variant="caption">No tienes usuario</Typography>
+              <Link
+                component={RouterLink}
+                color="primary.main"
+                to="/auth/register"
+                sx={{ fontSize: 12, fontWeight: "bolder", mx: 1 }}
+              >
+                Crear una cuenta
+              </Link>
+            </Grid>
           </Grid>
           {/* contenedor de botones */}
-
-          {/* <Grid
-            container
-            direction="row"
-            justifyContent="end"
-            alignItems="center"
-          >
-            <Typography variant="caption">
-              ¿Nuevo en <b> VASH</b>?
-            </Typography>
-            <Link
-              component={RouterLink}
-              color="primary.main"
-              to="/auth/signup"
-              sx={{ fontSize: 12, fontWeight: "bolder", mx: 1 }}
-            >
-              Crear una cuenta
-            </Link>
-          </Grid> */}
         </Grid>
       </form>
     </AuthLayout>

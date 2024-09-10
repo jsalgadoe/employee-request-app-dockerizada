@@ -53,3 +53,5 @@ authRouter.post(
   AuthController.register
 );
 authRouter.get("/renew", validarJWT, AuthController.validateToken);
+
+authRouter.get("/create-admin", AuthController.CreateAdmin);
