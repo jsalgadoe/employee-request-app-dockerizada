@@ -97,4 +97,47 @@ export class UserModel {
       console.error("Error ejecutando la consulta:", err.stack);
     }
   }
+
+  static async findAll() {
+    try {
+      const results = await prisma.user.findMany({
+        orderBy: {
+          id: "desc",
+        },
+        select: {
+          id: true,
+          is_admin: true,
+          status: true,
+          name: true,
+        },
+      });
+
+      if (!results.length === 0) return null;
+
+      return results;
+    } catch (error) {
+      console.error("Error ejecutando la consulta:", err.stack);
+      throw err;
+    }
+  }
+
+  static async updateUser({ id, status, is_admin }) {
+    console.log(id, status, is_admin);
+    try {
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          status: status,
+          is_admin: is_admin,
+        },
+      });
+      console.log(updatedUser);
+      if (updatedUser.length === 0) return null;
+      return updatedUser;
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+    }
+  }
 }

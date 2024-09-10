@@ -155,4 +155,42 @@ export class AuthController {
       });
     }
   };
+
+  static ListarUsuarios = async (req, res) => {
+    const usuarios = await UserModel.findAll();
+
+    if (!usuarios) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No hay usuarios que mostrar",
+      });
+    }
+    return res.status(200).json({
+      ok: true,
+      usuarios,
+    });
+  };
+
+  static UpdateUsuario = async (req, res) => {
+    const user = await UserModel.findByUserId(req.params.id);
+
+    const { is_admin: new_is_admin, status: new_is_status } = req.body;
+    if (!user) {
+      return res.status(200).json({
+        ok: false,
+        msg: "El usuario no existe, no puede actualizarlo",
+      });
+    }
+    const { id, is_admin, status } = user;
+
+    const updateUser = await UserModel.updateUser({
+      id,
+      is_admin: new_is_admin,
+      status: new_is_status,
+    });
+    return res.status(200).json({
+      ok: true,
+      user: updateUser,
+    });
+  };
 }

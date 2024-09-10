@@ -21,6 +21,9 @@ app.use(express.json());
 app.use("/api/v1/auth/", authRouter);
 app.use("/api/v1/employee", employeeRouter);
 app.use("/api/v1/request", requestRouter);
+app.get("/test", (req, res) => {
+  res.status(200).json("Hola mundo");
+});
 
 // app.get("/admin", [validarJWT, verificarAdmin], (req, res) => {
 //   res.json({

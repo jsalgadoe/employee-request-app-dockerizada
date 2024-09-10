@@ -52,4 +52,23 @@ export class EmployeeController {
       res.status(400).json({ errors: err.errors });
     }
   };
+
+  static listEmployeeWithOutParams = async (req, res) => {
+    try {
+      const empleados = await EmployeeModel.findAllWithOutParamas();
+
+      if (!empleados) {
+        return res.status(403).json({
+          message: "error",
+        });
+      }
+      return res.status(200).json({
+        ok: true,
+        empleados,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ errors: err.errors });
+    }
+  };
 }

@@ -77,3 +77,8 @@ employeeRouter.post(
   ],
   EmployeeController.createEmployee
 );
+
+employeeRouter.get(
+  "/listar-empleados",
+  EmployeeController.listEmployeeWithOutParams
+);
