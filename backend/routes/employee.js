@@ -4,6 +4,7 @@ import { check, query } from "express-validator";
 import { EmployeeController } from "../controllers/v1/employee/employee.controller.js";
 import { validarJWT } from "../middlewares/validar-jwt.js";
 import { validarCampos } from "../middlewares/validar-campos.js";
+import { verificarAdmin } from "../middlewares/verificar_admin.js";
 
 export const employeeRouter = Router();
 employeeRouter.use(validarJWT);
@@ -34,6 +35,7 @@ employeeRouter.get(
 employeeRouter.post(
   "/nuevo-empleado",
   [
+    verificarAdmin,
     check("full_name")
       .trim()
       .escape()

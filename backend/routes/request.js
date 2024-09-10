@@ -3,6 +3,7 @@ import { RequestController } from "../controllers/v1/request/request.controller.
 import { validarJWT } from "../middlewares/validar-jwt.js";
 import { validarCampos } from "../middlewares/validar-campos.js";
 import { query, check, param } from "express-validator";
+import { verificarAdmin } from "../middlewares/verificar_admin.js";
 
 export const requestRouter = Router();
 
@@ -11,6 +12,7 @@ requestRouter.use(validarJWT);
 requestRouter.get(
   "/solicitudes",
   [
+    verificarAdmin,
     query("search_term")
       .optional()
       .trim()
@@ -34,6 +36,7 @@ requestRouter.get(
 requestRouter.post(
   "/crear-solicitud",
   [
+    verificarAdmin,
     check("code")
       .trim()
       .escape()
@@ -69,6 +72,7 @@ requestRouter.post(
 requestRouter.delete(
   "/eliminar-solicitud/:id",
   [
+    verificarAdmin,
     param("id")
       .trim()
       .escape()
