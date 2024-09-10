@@ -25,6 +25,18 @@ export class RequestModel {
             },
           ],
         },
+        select: {
+          id: true,
+          code: true,
+          resumen: true,
+          description: true,
+          employee: {
+            select: {
+              full_name: true,
+              id: true,
+            },
+          },
+        },
         orderBy: {
           id: "desc",
         },

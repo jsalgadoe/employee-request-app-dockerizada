@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { RequestLayout } from "../layout/RequestLayout";
 import { AuthContext } from "../../auth/context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -9,31 +9,58 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import Grid from "@mui/material/Grid2";
 import { InputIcon } from "../../ui/components/forms/InputIcon";
 import PersonIcon from "@mui/icons-material/Person";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import FingerprintIcon from "@mui/icons-material/Fingerprint";
+import { employeeRequestApi } from "../../utils/employeeRequestApi";
+import Select from "react-select";
 
 export const NewPage = () => {
-  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
+  const [empleados, setEmpleados] = useState([]);
   const [error, setError] = useState("");
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: { code: "", resumen: "", description: "", employeeId: 0 },
-  });
+  const [success, setSuccess] = useState(false);
+  const [alert, setAlert] = useState(false);
 
   useEffect(() => {
     if (!user.is_admin) {
       navigate("/requests/");
     }
   }, [user, navigate]);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: { code: "", resumen: "", description: "", employeeId: 0 },
+  });
+
+  const getEmployees = async () => {
+    const { data } = await employeeRequestApi.get(
+      "http://localhost:3000/api/v1/employee/listar-empleados"
+    );
+
+    if (data.ok) {
+      setEmpleados(data.empleados);
+    }
+  };
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
+
+  const empleadosMapeado = useMemo(() => {
+    return empleados.map((empleado) => ({
+      value: empleado.id,
+      label: empleado.full_name,
+    }));
+  }, [empleados]);
 
   if (!user.is_admin) return null;
 
@@ -45,10 +72,29 @@ export const NewPage = () => {
     },
   };
 
-  function onSubmit() {}
+  const onSubmit = async (data) => {
+    setSuccess(false);
+    const { code, employeeId, description, resumen } = data;
+    const { data: result } = await employeeRequestApi.post(
+      "http://localhost:3000/api/v1/request/crear-solicitud",
+      {
+        code,
+        employee_id: Number(employeeId.value),
+        description: description,
+        resumen,
+      }
+    );
+    if (!result.ok) {
+      setAlert(true);
+      setError("No se pudo crear la solicitud");
+    }
+    setSuccess(true);
+    setAlert(true);
+    reset();
+  };
   return (
-    <RequestLayout>
-      <Box sx={{ mt: 10 }}>
+    <RequestLayout titulo={"Registrar solicitudes"}>
+      <Box sx={{ mt: 1 }}>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="animate__animated animate__fadeIn  animate__faster roboto-regular"
@@ -102,7 +148,7 @@ export const NewPage = () => {
             </Grid>
 
             <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
-              <Typography className="my-2"> Descripcion</Typography>
+              <Typography className="my-2"> Descripción</Typography>
               <TextareaAutosize
                 maxRows={12}
                 cols={44}
@@ -110,10 +156,10 @@ export const NewPage = () => {
                 aria-label="maximum height"
                 placeholder="Maximo 12 filas"
                 sx={styleTexfield}
-                {...register("descripcion", { required: true })}
+                {...register("description", { required: true })}
                 aria-invalid={errors.description ? "true" : "false"}
               />
-              {errors.descripcion?.type === "required" && (
+              {errors.description?.type === "required" && (
                 <p
                   role="alert"
                   className="text-red-500 font-semibold text-xs my-2"
@@ -123,10 +169,29 @@ export const NewPage = () => {
               )}
             </Grid>
 
+            <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
+              <Controller
+                name="employeeId"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Select
+                    {...field} // Aquí pasamos las props del campo
+                    className="basic-single"
+                    classNamePrefix="select"
+                    defaultValue={empleadosMapeado[0]}
+                    isSearchable={true}
+                    options={empleadosMapeado}
+                  />
+                )}
+              />
+            </Grid>
+
             {!!error && (
               <Grid sx={{ mt: 2, width: "100%" }}>
                 <p
                   role="alert"
+                  style={{ display: alert ? "block" : "none" }}
                   className="text-red-500 font-semibold text-sm my-2 bg-red-100 p-5"
                 >
                   {error}
@@ -134,10 +199,25 @@ export const NewPage = () => {
               </Grid>
             )}
 
+            {!!success && (
+              <Grid sx={{ mt: 2, width: "100%" }}>
+                <p
+                  onClick={() => {
+                    setAlert(false);
+                  }}
+                  style={{ display: alert ? "block" : "none" }}
+                  role="alert"
+                  className="text-center text-green-700 font-semibold text-sm my-2 bg-green-200 p-5"
+                >
+                  {"La solicitud fue creada exitosamente"}
+                </p>
+              </Grid>
+            )}
+
             {/* contenedor de botones */}
             <Grid container spacing={2} sx={{ mb: 2, mt: 1, width: "100%" }}>
               <Grid size={{ xs: 12, sm: 12 }}>
-                <Button type="input" variant="contained" fullWidth>
+                <Button type="submit" variant="contained" fullWidth>
                   Crear Solicitud
                 </Button>
               </Grid>

@@ -46,6 +46,12 @@ const allPages = [
     path: "/requests/new",
     admin: true,
   },
+  {
+    id: 5,
+    name: "Gestionar usuarios",
+    path: "/auth/users",
+    admin: true,
+  },
 ];
 
 export const NavBar = (props) => {

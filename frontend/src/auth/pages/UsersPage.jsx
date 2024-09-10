@@ -1,28 +1,33 @@
-import { Grid2 } from "@mui/material";
-import { AuthContext } from "../../auth/context/AuthContext";
-import { useContext } from "react";
+import Grid from "@mui/material/Grid2";
+import { AuthContext } from "../context/AuthContext";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { NavBar } from "../../ui/components/shared/NavBar";
-import { TableDataGrid } from "../../ui/components/requests/TableDataGrid";
+// import PropTypes from "prop-types";
 
-export const IndexPage = () => {
+export const UsersPage = () => {
+  const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
-  return (
-    <div>
-      <NavBar is_admin={user.is_admin} logout={logout} />
 
-      <Grid2
+  useEffect(() => {
+    if (!user.is_admin) {
+      navigate("/employees/");
+    }
+  }, [user, navigate]);
+
+  if (!user.is_admin) return null;
+  return (
+    <>
+      <NavBar is_admin={user.is_admin} logout={logout} />
+      <Grid
         container
         spacing={0}
         direction="column"
         alignItems="center"
         justifyContent="center"
-        sx={{
-          minHeight: "100vh",
-          backgroundColor: "#dcdcdcd6",
-          padding: 4,
-        }}
+        sx={{ minHeight: "100vh", backgroundColor: "primary.main", padding: 4 }}
       >
-        <Grid2
+        <Grid
           className="box-shadow"
           justifyContent="end"
           size={{ xs: 3 }}
@@ -32,21 +37,19 @@ export const IndexPage = () => {
             marginBottom: 2,
             borderRadius: 2,
           }}
-        ></Grid2>
+        ></Grid>
 
-        <Grid2
+        <Grid
           size={{ xs: 3 }}
           className="box-shadow"
           sx={{
-            width: { sm: 850 },
+            width: { sm: 450 },
             backgroundColor: "white",
             padding: 3,
             borderRadius: 2,
           }}
-        >
-          <TableDataGrid is_admin={user.is_admin} />
-        </Grid2>
-      </Grid2>
-    </div>
+        ></Grid>
+      </Grid>
+    </>
   );
 };
