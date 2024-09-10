@@ -90,7 +90,6 @@ export class EmployeeModel {
           id: "desc",
         },
       });
-      console.log("aqio ,pdieñp");
       return results;
     } catch (err) {
       console.error("Error ejecutando la consulta:", err.stack);

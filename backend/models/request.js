@@ -1,7 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 export class RequestModel {
   static async findAll(search_term = "", page_number = 1, page_size = 10) {
-    // console.log((page_number = 1), (page_size = 10));
     const offset = (page_number - 1) * page_size;
     try {
       const results = await prisma.request.findMany({
@@ -121,7 +120,6 @@ export class RequestModel {
   }
 
   static async findOneById(id) {
-    console.log(id);
     try {
       const request = await prisma.request.findMany({
         where: { id: Number(id) },

@@ -149,7 +149,6 @@ export class UserModel {
   }
 
   static async updateUser({ id, status, is_admin }) {
-    console.log(id, status, is_admin);
     try {
       const updatedUser = await prisma.user.update({
         where: {

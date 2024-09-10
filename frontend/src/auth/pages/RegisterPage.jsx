@@ -1,7 +1,7 @@
 import { Button, Link, TextField, Typography } from "@mui/material";
 // import { Link as RouterLink, useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../layouts/AuthLayout";
 import { InputIcon } from "../../ui/components/forms/InputIcon";
 import { Email, Visibility, VisibilityOff } from "@mui/icons-material";
@@ -22,7 +22,6 @@ const styleTexfield = {
 
 export const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { login: StarLogin } = useContext(AuthContext);
   const [error, setError] = useState("");
 
   const {
@@ -30,6 +29,7 @@ export const RegisterPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues: { user: "", password: "" } });
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
@@ -39,7 +39,7 @@ export const RegisterPage = () => {
       );
 
       if (result.ok) {
-        StarLogin(result.user, result.token);
+        navigate("/auth/login");
       }
     } catch (error) {
       console.log(error.response.data);

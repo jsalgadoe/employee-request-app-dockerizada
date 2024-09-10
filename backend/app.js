@@ -25,13 +25,6 @@ app.get("/test", (req, res) => {
   res.status(200).json("Hola mundo");
 });
 
-// app.get("/admin", [validarJWT, verificarAdmin], (req, res) => {
-//   res.json({
-//     ok: true,
-//     msg: "Acceso concedido a ruta de admin",
-//   });
-// });
-
 app.listen(PORT, () => {
   console.log(`Servido en el puerto http://localhost:${PORT} !!!`);
 });

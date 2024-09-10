@@ -21,7 +21,7 @@ describe("GET /api/products", () => {
       name: userName,
       password: "123456",
     });
-    console.log(res.body);
+
     expect(res.statusCode).toBe(201);
     expect(res.body).toMatchObject({ ok: true });
   });
@@ -32,7 +32,7 @@ describe("GET /api/products", () => {
       name: user_name,
       password: "123456",
     });
-    console.log(res.body);
+
     expect(res.statusCode).toBe(400);
     expect(res.body).toMatchObject({ ok: false });
     expect(res.body).toMatchObject({

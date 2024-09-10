@@ -41,7 +41,11 @@ export const LoginPage = () => {
       StarLogin(result.user, result.token);
     } catch (error) {
       console.log(error.response.data);
-      if (!error.response.data.ok) {
+      if (error.response.data.msg.startsWith("El usuario no este activo")) {
+        setError(
+          "Te has registrado, ahora comunicate con el admin para activar la cuenta"
+        );
+      } else {
         setError("Credenciales Incorrectas");
       }
     }

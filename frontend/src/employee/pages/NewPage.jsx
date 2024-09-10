@@ -49,12 +49,7 @@ export const NewPage = () => {
   const onSubmit = async (data) => {
     try {
       setSuccess(false);
-      console.log(
-        data.full_name,
-        data.hire_date,
-        data.salary,
-        data.identification
-      );
+
       const { data: result } = await employeeRequestApi.post(
         "http://localhost:3000/api/v1/employee/nuevo-empleado",
         {

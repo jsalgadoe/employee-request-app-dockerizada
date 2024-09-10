@@ -142,7 +142,6 @@ export const TableDataGrid = (props) => {
   };
 
   const updateUser = async ({ id, status, is_admin }) => {
-    console.log({ id, status, is_admin });
     setLoading(true);
     try {
       const response = await employeeRequestApi.put(
