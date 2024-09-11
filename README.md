@@ -45,3 +45,6 @@ Pruebas tecnica para analista de desarrollo
 2. Json con las endpoint del backend
 
 3. Roles e entidades
+4. usuario admin generado por la ruta
+   admin:12345
+   password: 123456
