@@ -46,5 +46,6 @@ Pruebas tecnica para analista de desarrollo
 
 3. Roles e entidades
 4. usuario admin generado por la ruta
-   admin:12345
+   
+   usuario:admin
    password: 123456
